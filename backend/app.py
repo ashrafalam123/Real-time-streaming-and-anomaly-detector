@@ -29,17 +29,15 @@ def process_weather_data(raw_data):
     global latest_data
 
     try:
-        data = json.loads(raw_data)  # Parse JSON data from WebSocket
-        temperature = float(data["Temperature"])  # Extract the temperature value
-
-        # Add the new temperature to the data window and all temperature data
+        data = json.loads(raw_data) 
+        temperature = float(data["Temperature"])  
         data_window.append(temperature)
 
         # Calculate mean, variance, and detect anomaly if we have sufficient data points
         if len(data_window) >= 20:
             current_mean = mean(data_window)
             current_variance = variance(data_window)
-            # Anomaly detection: Check if temperature lies outside (mean ± 3 * std_dev)
+            # Anomaly detection: Check if temperature lies outside (mean ± 2 * std_dev)
             anomaly = abs(temperature - current_mean) > 2*(current_variance ** 0.5)
             if (anomaly and data["noise"] == True) or (not anomaly and data["noise"] == False):
                 predicted =  True
@@ -82,7 +80,7 @@ def get_weather_data():
 
 @app.route('/')
 def index():
-    """Render the frontend template."""
+    """Render the frontend template. Initally was being shown via html, now switched to react"""
     # return render_template('index.html')
 
 def start_ws_loop():
