@@ -12,24 +12,24 @@ function App() {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://127.0.0.1:5000/weather-data");
-        console.log('Fetched data:', response.data); // Log the fetched data
-        setAllData(response.data.history); // Ensure you're accessing the correct data
+        console.log('Fetched data:', response.data); 
+        setAllData(response.data.history); 
         setLatest10(response.data.history.slice(-10).reverse()); // Get the last 10 entries and reverse them
-        setLoading(false); // Set loading to false after data is fetched
+        setLoading(false); 
       } catch (error) {
         console.error('Error fetching data:', error); // Log any errors
       }
     };
 
     const interval = setInterval(() => {
-      fetchData(); // Fetch data every second
+      fetchData();
     }, 1000);
 
     // Initial fetch before starting the interval
     fetchData();
 
-    return () => clearInterval(interval); // Clear the interval on component unmount
-  }, []); // Empty dependency array means this runs once on mount
+    return () => clearInterval(interval); 
+  }, []); 
 
   const toggleHistory = () => {
     setShowHistory(!showHistory); // Toggle the history view
