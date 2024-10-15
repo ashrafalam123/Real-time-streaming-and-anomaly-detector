@@ -7,13 +7,18 @@ from redis.asyncio import Redis
 # Store active WebSocket connections
 connected_clients = set()
 
-# Redis connection details
+"""
+Subscribe to the redis channel where the data is being published and start a websocket server on the default port 8080
+This would broadcast the fetched data from the channel
+
+This can additonally be checked on Hoppscotch if we create a socket connection to this port, the data gets displayed
+"""
 REDIS_CHANNEL = "Weather_data"
-redis = Redis()  # Initialize Redis client
+redis = Redis()  
 
 async def broadcast(message: str):
     """Broadcast a message to all connected WebSocket clients."""
-    if connected_clients:  # Only send if there are connected clients
+    if connected_clients:  
         print(f"Broadcasting message: {message}")
         await asyncio.gather(*[client.send(message) for client in connected_clients])
 
@@ -23,8 +28,8 @@ async def handle_client(websocket: WebSocketServerProtocol):
     print(f"New client connected: {websocket.remote_address}")
 
     try:
-        async for _ in websocket:  # Keep connection open to receive messages
-            pass  # No need to handle incoming messages in this example
+        async for _ in websocket:  
+            pass 
     except websockets.ConnectionClosed:
         pass
     finally:
@@ -51,7 +56,6 @@ async def main():
     await asyncio.gather(websocket_server.wait_closed(), redis_listener())
 
 def run():
-    """Ensure proper handling of the event loop."""
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
