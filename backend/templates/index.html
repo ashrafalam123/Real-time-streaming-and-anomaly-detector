@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Data Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        .data { margin: 10px 0; }
+        .anomaly { color: red; font-weight: bold; }
+        .normal { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Weather Data Dashboard</h1>
+    <div id="weather-container"></div>
+
+    <script>
+        async function fetchWeatherData() {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/weather-data');
+                const data = await response.json();
+
+                const weatherContainer = document.getElementById('weather-container');
+                weatherContainer.innerHTML = '';  // Clear previous data
+
+                const { temperature, mean, variance, anomaly } = data;
+
+                const weatherInfo = document.createElement('p');
+                weatherInfo.className = anomaly ? 'anomaly' : 'normal';
+                weatherInfo.textContent = `Temp: ${temperature}°C | Mean: ${mean} | Variance: ${variance}`;
+
+                weatherContainer.appendChild(weatherInfo);
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+            }
+        }
+
+        // Poll the backend every second to get new data
+        setInterval(fetchWeatherData, 1000);
+    </script>
+</body>
+</html>
