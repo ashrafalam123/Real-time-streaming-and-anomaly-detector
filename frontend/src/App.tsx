@@ -14,7 +14,7 @@ function App() {
         const response = await axios.get("http://127.0.0.1:5000/weather-data");
         console.log('Fetched data:', response.data); // Log the fetched data
         setAllData(response.data.history); // Ensure you're accessing the correct data
-        setLatest10(response.data.history.slice(-10)); // Get the last 10 entries
+        setLatest10(response.data.history.slice(-10).reverse()); // Get the last 10 entries and reverse them
         setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
         console.error('Error fetching data:', error); // Log any errors
@@ -53,14 +53,15 @@ function App() {
       ) : (
         <div>
           <div>
-            <div className="text-2xl font-bold">Latest 10 Entries</div>
+          {!showHistory ? (
+            <div className="text-2xl font-bold">Latest 10 Entries</div>) : <div></div>}
             {latest10.map((data : any, index) => (
-              <div key={index} style={{ color: data.predicted ? 'green' : 'red' }}>
+              <div key={index} style={{ color: data.anomaly ? 'red' : 'green' }}>
                 <p>Temperature: {data.temperature} °C</p>
                 {/* <p>Mean: {data.mean} °C</p>
                 <p>Variance: {data.variance}</p> */}
                 <p>Anomaly: {data.anomaly ? 'Yes' : 'No'}</p>
-                <p>Predicted : {data.predicted ? 'Correct' : 'Incorrect'}</p>
+                <p>Predicted: {data.predicted ? 'Correct' : 'Incorrect'}</p>
                 <hr />
               </div>
             ))}
@@ -68,9 +69,8 @@ function App() {
 
           {showHistory && (
             <div className="mt-4">
-              <div className="text-2xl font-bold">Historical Data</div>
-              {allData.map((data : any, index) => (
-                <div key={index} style={{ color: data.predicted ? 'green' : 'red' }}>
+              {allData.slice().reverse().map((data : any, index) => ( // Reverse historical data for display
+                <div key={index} style={{ color: data.anomaly ? 'red' : 'green' }}>
                   <p>Temperature: {data.temperature} °C</p>
                   {/* <p>Mean: {data.mean} °C</p>
                   <p>Variance: {data.variance}</p> */}
