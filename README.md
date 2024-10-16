@@ -51,6 +51,11 @@ npm install
 npm run dev
 ```
 
+## Things to add
+
+The backend is being polled and the calculations are being done on one backend and the server is sending data from one, these can be merged together which would reduce the cost of calling the server so many times.
+A singleton can be created to handle multiple users who are listening to multiple stocks, it is already present in one of the other repository, that can handle state manangements at the backend more efficiently
+
 
 
 
